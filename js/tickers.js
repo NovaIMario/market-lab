@@ -1,0 +1,36 @@
+// The instruments the site tracks. `symbol` is the Yahoo Finance symbol; `id` is the file name and URL key.
+export const TICKERS = [
+  { id: 'SPY', symbol: 'SPY', name: 'S&P 500 ETF', group: 'Indices & ETFs' },
+  { id: 'QQQ', symbol: 'QQQ', name: 'Nasdaq-100 ETF', group: 'Indices & ETFs' },
+  { id: 'DIA', symbol: 'DIA', name: 'Dow Jones ETF', group: 'Indices & ETFs' },
+  { id: 'IWM', symbol: 'IWM', name: 'Russell 2000 ETF', group: 'Indices & ETFs' },
+  { id: 'FTSE', symbol: '^FTSE', name: 'FTSE 100', group: 'Indices & ETFs' },
+  { id: 'GLD', symbol: 'GLD', name: 'Gold ETF', group: 'Indices & ETFs' },
+  { id: 'TLT', symbol: 'TLT', name: '20+ Year Treasury ETF', group: 'Indices & ETFs' },
+
+  { id: 'AAPL', symbol: 'AAPL', name: 'Apple', group: 'US stocks' },
+  { id: 'MSFT', symbol: 'MSFT', name: 'Microsoft', group: 'US stocks' },
+  { id: 'NVDA', symbol: 'NVDA', name: 'NVIDIA', group: 'US stocks' },
+  { id: 'GOOGL', symbol: 'GOOGL', name: 'Alphabet', group: 'US stocks' },
+  { id: 'AMZN', symbol: 'AMZN', name: 'Amazon', group: 'US stocks' },
+  { id: 'META', symbol: 'META', name: 'Meta Platforms', group: 'US stocks' },
+  { id: 'TSLA', symbol: 'TSLA', name: 'Tesla', group: 'US stocks' },
+  { id: 'NFLX', symbol: 'NFLX', name: 'Netflix', group: 'US stocks' },
+  { id: 'AMD', symbol: 'AMD', name: 'AMD', group: 'US stocks' },
+  { id: 'JPM', symbol: 'JPM', name: 'JPMorgan Chase', group: 'US stocks' },
+  { id: 'GS', symbol: 'GS', name: 'Goldman Sachs', group: 'US stocks' },
+  { id: 'V', symbol: 'V', name: 'Visa', group: 'US stocks' },
+  { id: 'XOM', symbol: 'XOM', name: 'Exxon Mobil', group: 'US stocks' },
+  { id: 'KO', symbol: 'KO', name: 'Coca-Cola', group: 'US stocks' },
+  { id: 'JNJ', symbol: 'JNJ', name: 'Johnson & Johnson', group: 'US stocks' },
+
+  { id: 'HSBA.L', symbol: 'HSBA.L', name: 'HSBC', group: 'UK stocks' },
+  { id: 'AZN.L', symbol: 'AZN.L', name: 'AstraZeneca', group: 'UK stocks' },
+  { id: 'SHEL.L', symbol: 'SHEL.L', name: 'Shell', group: 'UK stocks' },
+  { id: 'ULVR.L', symbol: 'ULVR.L', name: 'Unilever', group: 'UK stocks' },
+  { id: 'BARC.L', symbol: 'BARC.L', name: 'Barclays', group: 'UK stocks' },
+  { id: 'RR.L', symbol: 'RR.L', name: 'Rolls-Royce', group: 'UK stocks' },
+
+  { id: 'BTC-USD', symbol: 'BTC-USD', name: 'Bitcoin', group: 'Crypto' },
+  { id: 'ETH-USD', symbol: 'ETH-USD', name: 'Ether', group: 'Crypto' },
+];

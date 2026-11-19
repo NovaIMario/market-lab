@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Market Lab</title>
+  <meta name="description" content="Interactive stock, index and crypto charts with technical indicators, Monte Carlo forecast cones and honestly backtested next-day predictions.">
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232a78d6'/%3E%3Cpath d='M6 22l6-7 5 4 9-11' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#" aria-label="Market Lab home">
+        <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--series-1)"/><path d="M6 22l6-7 5 4 9-11" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="brand-name">Market Lab</span>
+      </a>
+      <div class="picker">
+        <label class="sr-only" for="ticker">Market</label>
+        <select id="ticker"></select>
+      </div>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch theme">
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="quote" aria-live="polite">
+      <div>
+        <h1 id="q-name">Loading…</h1>
+        <p class="q-meta" id="q-meta"></p>
+      </div>
+      <div class="q-price">
+        <span id="q-last" class="q-last"></span>
+        <span id="q-change" class="delta"></span>
+        <span class="q-date" id="q-date"></span>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="chart-title">
+      <h2 id="chart-title" class="sr-only">Price chart</h2>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Time range" id="ranges">
+          <button type="button" data-range="21">1M</button>
+          <button type="button" data-range="63">3M</button>
+          <button type="button" data-range="126">6M</button>
+          <button type="button" data-range="ytd">YTD</button>
+          <button type="button" data-range="252" aria-pressed="true">1Y</button>
+          <button type="button" data-range="1260">5Y</button>
+          <button type="button" data-range="max">Max</button>
+        </div>
+        <div class="seg" role="group" aria-label="Chart type" id="types">
+          <button type="button" data-type="candles" aria-pressed="true">Candles</button>
+          <button type="button" data-type="line">Line</button>
+        </div>
+        <div class="checks" role="group" aria-label="Overlays" id="overlays">
+          <label><input type="checkbox" value="sma20"><span class="key" style="background:var(--series-2)"></span>SMA 20</label>
+          <label><input type="checkbox" value="sma50" checked><span class="key" style="background:var(--series-3)"></span>SMA 50</label>
+          <label><input type="checkbox" value="sma200"><span class="key" style="background:var(--series-7)"></span>SMA 200</label>
+          <label><input type="checkbox" value="boll"><span class="key band"></span>Bollinger</label>
+        </div>
+        <label class="lower-pick">Lower pane
+          <select id="lower">
+            <option value="volume">Volume</option>
+            <option value="rsi">RSI</option>
+            <option value="macd">MACD</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+      </div>
+      <p class="readout" id="readout" aria-live="off"></p>
+      <div class="price-chart" id="price-chart" role="img" aria-label="Price chart. Drag to pan, scroll to zoom, arrow keys move the crosshair."></div>
+      <p class="hint">Drag to pan · scroll or +/− to zoom · candles switch to a line when zoomed far out</p>
+      <details class="table-view">
+        <summary>Price table</summary>
+        <div class="table-scroll"><table id="price-table"></table></div>
+      </details>
+    </section>
+
+    <section class="card" aria-labelledby="fc-title">
+      <h2 id="fc-title">Where could it be in three months?</h2>
+      <p class="lede" id="fc-lede"></p>
+      <div class="split">
+        <div class="chart-box">
+          <div class="line-chart" id="fc-chart" role="img" aria-label="Forecast cone chart"></div>
+          <div class="tip" id="fc-tip" hidden></div>
+          <div class="legend">
+            <span><span class="key" style="background:var(--series-1)"></span>Price</span>
+            <span><span class="key dashed"></span>Median path</span>
+            <span><span class="key band-2"></span>50% range</span>
+            <span><span class="key band"></span>90% range</span>
+          </div>
+        </div>
+        <div>
+          <table class="data" id="fc-table"></table>
+          <div class="callout" id="fc-calib"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="bt-title">
+      <h2 id="bt-title">Can a model call tomorrow?</h2>
+      <p class="lede" id="bt-lede"></p>
+      <div class="table-scroll">
+        <table class="data models" id="bt-table"></table>
+      </div>
+      <h3 class="sub">Growth of 1 if you followed each model <span class="muted">(log scale, after 0.05% trading costs)</span></h3>
+      <div class="chart-box">
+        <div class="line-chart tall" id="eq-chart" role="img" aria-label="Equity curves of each model's strategy"></div>
+        <div class="tip" id="eq-tip" hidden></div>
+      </div>
+      <div class="legend toggles" id="eq-legend"></div>
+      <div class="verdict" id="bt-verdict"></div>
+    </section>
+
+    <section class="card" aria-labelledby="all-title">
+      <h2 id="all-title">All markets</h2>
+      <div class="table-scroll">
+        <table class="data markets" id="all-table"></table>
+      </div>
+    </section>
+
+    <section class="card method" aria-labelledby="how-title">
+      <h2 id="how-title">How it works</h2>
+      <div class="cols">
+        <div>
+          <h3>Data</h3>
+          <p>Ten years of daily prices for each market come from Yahoo Finance every evening through a GitHub Actions job. Prices are adjusted for splits and dividends, so a 2-for-1 split doesn't look like a 50% crash. UK shares are quoted in pence.</p>
+        </div>
+        <div>
+          <h3>Forecast cone</h3>
+          <p>4,000 simulated futures, each built by resampling 5-day blocks of the last 500 daily returns. The average return is removed first, so the cone measures how far the price could move, not which way. The bands show where 50% and 90% of the simulated paths ended up.</p>
+        </div>
+        <div>
+          <h3>Backtest</h3>
+          <p>Walk-forward with no lookahead: on each day, each model only sees data up to that day's close. The learned models retrain every 21 trading days on the previous 750 days. A strategy holds the asset when its model predicts a rise and holds cash otherwise, paying 0.05% each time it switches.</p>
+        </div>
+        <div>
+          <h3>Testing the result</h3>
+          <p>Accuracy alone is misleading, because markets rise on more than half of days. Each model is compared with "always up" using McNemar's test on the days where the two disagree. A p-value under 0.05 is shown as significant, but with 5 models on 30 markets, about 4 would look significantly better by luck alone.</p>
+        </div>
+      </div>
+      <p class="disclaimer">This site is a statistics project, not financial advice. Past performance does not predict future returns.</p>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <span id="updated"></span>
+    <a href="https://github.com/NovaIMario/market-lab">Source on GitHub</a>
+  </footer>
+</body>
+</html>
